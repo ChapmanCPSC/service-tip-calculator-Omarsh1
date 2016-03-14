@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     var whichPress : Int = 1
     //Double to hold calculated result of tip amount
     var calculatedTip : Double = 0
+    //Optional double holds the value of the bill amount input
+    var userBillInputValue : Double? = nil
     
     //Outlet reference to UIImage view
     @IBOutlet weak var calculationImage: UIImageView!
@@ -48,50 +50,67 @@ class ViewController: UIViewController {
     //Action when the calculate tip button is pressed
     @IBAction func calculateButtonPressed(sender: UIButton) {
         if(whichPress % 2 != 0){
-            calculatedTipText.text = ""
-            startTheAnimation()
-            ButtonOutlet.setTitle("Press again to show result", forState:.Normal)
+            userBillInputValue = (Double)(userBillInput.text!)
+            if(userBillInputValue != nil){
+                if(userBillInputValue! > 0){
+                    calculatedTipText.text = ""
+                    startTheAnimation()
+                    ButtonOutlet.setTitle("Press again to show result", forState:.Normal)
+                }
+                else{
+                    calculatedTipText.textColor = UIColor.redColor()
+                    calculatedTipText.font = calculatedTipText.font.fontWithSize(20)
+                    calculatedTipText.text = "Please re-enter bill info"
+                    whichPress--
+                }
+            }
+            else{
+                calculatedTipText.textColor = UIColor.redColor()
+                calculatedTipText.font = calculatedTipText.font.fontWithSize(20)
+                calculatedTipText.text = "Please re-enter bill info"
+                whichPress--
+            }
         }
         else{
             ButtonOutlet.setTitle("Click to calculate tip", forState:.Normal)
+            calculatedTipText.font = calculatedTipText.font.fontWithSize(25)
             calculationImage.image = nil
-            
-            var qualityOfService = (Int)(round(sliderRateChooser.value))
+            let qualityOfService = (Int)(round(sliderRateChooser.value))
             switch(qualityOfService){
             case 1:
                 fallthrough
             case 2:
                 fallthrough
             case 3:
-                calculatedTip = 0.10*(Double)(userBillInput.text!)!
+                calculatedTip = 0.10 * userBillInputValue!
                 calculatedTipText.textColor = UIColor.redColor()
-                calculatedTipText.text = (String)(calculatedTip)
+                calculatedTipText.text = "Tip amount: " + (String)(calculatedTip)
                 break
             case 4:
                 fallthrough
             case 5:
-                calculatedTip = 0.13*(Double)(userBillInput.text!)!
+                calculatedTip = 0.13 * userBillInputValue!
                 calculatedTipText.textColor = UIColor.orangeColor()
-                calculatedTipText.text = (String)(calculatedTip)
+                calculatedTipText.text = "Tip amount: " + (String)(calculatedTip)
                 break
             case 6:
                 fallthrough
             case 7:
+                calculatedTip = 0.15 * userBillInputValue!
                 calculatedTipText.textColor = UIColor.yellowColor()
-                calculatedTip = 0.15*(Double)(userBillInput.text!)!
-                calculatedTipText.text = (String)(calculatedTip)
+                calculatedTipText.text = "Tip amount: " + (String)(calculatedTip)
                 break
             case 8:
                 fallthrough
             case 9:
+                calculatedTip = 0.20 * userBillInputValue!
                 calculatedTipText.textColor = UIColor.yellowColor()
-                calculatedTip = 0.20*(Double)(userBillInput.text!)!
-                calculatedTipText.text = (String)(calculatedTip)
+                calculatedTipText.text = "Tip amount: " + (String)(calculatedTip)
                 break
             case 10:
+                calculatedTip = 0.25 * userBillInputValue!
                 calculatedTipText.textColor = UIColor.greenColor()
-                calculatedTip = 0.25*(Double)(userBillInput.text!)!
-                calculatedTipText.text = (String)(calculatedTip)
+                calculatedTipText.text = "Tip amount: " + (String)(calculatedTip)
                 break
             default:
                 break
@@ -100,7 +119,7 @@ class ViewController: UIViewController {
         whichPress++
     }
 
-    //Function starts the animation whilst calculating tip
+    //Function starts the animation whilst calculating tip ;;)
     func startTheAnimation(){
         calculationImage.image = UIImage(named:"TipAnim9.png")!
         calculationImage.animationDuration = 1
